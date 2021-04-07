@@ -20,24 +20,35 @@ function record(){
 }
 
 function search(){
-    document.getElementById("results").value = ""
+    document.getElementById("results").innerHTML = ""
     console.log("search")
     text = document.getElementById("search-text").value
     console.log(text)
-    sdk.searchGet({"q": text},{},{}).then(function(response) {
+    // sdk.searchGet({"q": text, "x-api-key": "6WdwZmOhdx9cFJh7LVdoY7PhyxI6qAjz39DbGfae"},{},{}).then(function(response) {
+    sdk.searchGet({"q": text, "x-api-key": "6WdwZmOhdx9cFJh7LVdoY7PhyxI6qAjz39DbGfae"},{},{}).then(function(response) {
+        
         images = response.data.body
         console.log(images)
-        if (images.length == 0){
+        
+        console.log(images["images"])
+
+        if (images["images"].length == 0){
             var h3 = document.createElement('h3');
             h3.value = "No search results"
             document.getElementById("results").append(h3)
         }
 
         else {
-            for (image in images){
-                var img = document.createElement("img")
-                img.source = images[image]
-                document.getElementById("results").append(img)
+            for (var i=0; i<images["images"].length; i++){
+            	try{
+	        		var img = document.createElement("img")
+	                img.src = images["images"][i]
+	                document.getElementById("results").append(img)
+	                console.log("Inside try")
+            	}
+                catch{
+                	console.log("caught")
+                }
             }
         }
     }).catch(e => {console.log(e)});
